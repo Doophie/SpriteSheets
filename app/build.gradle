@@ -1,8 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 30
@@ -35,9 +36,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
+def libraryName = "SpriteSheet"
 def libraryGroupId = 'ca.doophie'
 def libraryArtifactId = 'spritesheets'
 def libraryVersion = '0.0.1'
+def gitUrl = 'https://github.com/Doophie/SpriteSheets'
 
 afterEvaluate {
     publishing {
@@ -53,6 +56,45 @@ afterEvaluate {
     }
 }
 
+group = libraryGroupId
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId libraryGroupId
+                artifactId libraryArtifactId
+
+                // Add your description here
+                name libraryName
+                description "A library for managing sprite sheets."
+
+                // Set your license
+                licenses {
+                    license {
+                        name "Apache License, Version 2.0"
+                        url "http://www.apache.org/licenses/LICENSE-2.0"
+                    }
+                }
+                developers {
+                    developer {
+                        id "doophie"
+                        name "Quinn Fagan"
+                        email "quinn@doophie.ca"
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                }
+            }
+        }
+    }
+}
+
+
 bintray {
     user = project.property('bintray.user')
     key = project.property('bintray.token')
@@ -60,11 +102,11 @@ bintray {
     publish = true
     override = true
     pkg {
-        repo = 'demo-repo'
+        repo = 'SpriteSheet'
         name = libraryArtifactId
-        desc = 'Here is my library description'
+        desc = 'Library for handling and drawing sprites on a sprite sheet.'
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/apkelly/demo_library.git'
+        vcsUrl = gitUrl
         publicDownloadNumbers = true
         version {
             name = libraryVersion
