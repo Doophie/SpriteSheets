@@ -1,2 +1,3 @@
-include ':app'
+include ':spritesheet'
+include ':spritesheet_testapp'
 rootProject.name = "Sprite Sheets"
