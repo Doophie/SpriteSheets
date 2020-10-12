@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="layoutCornerRadius" format="float"/>
+
+    <declare-styleable name="RoundedFrameLayout" parent="RoundedView">
+        <attr name="layoutCornerRadius" format=""/>
+    </declare-styleable>
+</resources>
