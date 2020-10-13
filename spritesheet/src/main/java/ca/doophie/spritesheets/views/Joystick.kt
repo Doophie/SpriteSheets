@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.View
+import androidx.core.content.ContextCompat
+import ca.doophie.spritesheets.R
 import java.lang.Exception
 import java.lang.Math.atan2
 import kotlin.math.pow
@@ -28,8 +30,18 @@ class Joystick(context: Context, attributes: AttributeSet):
     var movementCallbacks: JoystickMovementCallbacks? = null
     var selectionCallbacks: JoystickSelectionCallbacks? = null
 
+    private var padColor: Int // Color.argb(50, 100, 0, 0)
+    private var stickColor: Int // Color.argb(0,0, 200, 0)
+
     var selectionNumItems: Int = 360
     private val selectionDiv: Int get() { return 360 / selectionNumItems }
+
+    init {
+        val ta = getContext().obtainStyledAttributes(attributes, R.styleable.Joystick)
+        padColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickBackground, R.color.colorPrimary))
+        stickColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickForeground, R.color.colorPrimaryDark))
+        ta.recycle()
+    }
 
     override fun onTouch(v: View?, e: MotionEvent?): Boolean {
         if(v?.equals(this) == true){
@@ -64,9 +76,6 @@ class Joystick(context: Context, attributes: AttributeSet):
         return true
     }
 
-    private var padColor = Color.argb(50, 100, 0, 0)
-    private var stickColor = Color.argb(0,0, 200, 0)
-
     private val centerX
         get() = width / 2f
     private val centerY
@@ -100,9 +109,9 @@ class Joystick(context: Context, attributes: AttributeSet):
 
             myCanvas.drawColor(0, PorterDuff.Mode.SRC_IN)
 
-//            // draw pad
-//            color.color = padColor
-//            myCanvas.drawCircle(centerX, centerY, baseRadius, color)
+            // draw pad
+            color.color = padColor
+            myCanvas.drawCircle(centerX, centerY, baseRadius, color)
 
             // draw stick
             color.color = stickColor

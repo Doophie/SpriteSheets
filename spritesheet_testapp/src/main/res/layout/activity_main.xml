@@ -22,6 +22,8 @@
 
     <ca.doophie.spritesheets.views.Joystick
         android:id="@+id/playerJoystick"
+        app:stickForeground="@color/colorPrimary"
+        app:stickBackground="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="240dp"

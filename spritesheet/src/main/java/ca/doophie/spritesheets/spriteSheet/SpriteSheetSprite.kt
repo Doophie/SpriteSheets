@@ -45,6 +45,13 @@ class SpriteSheetSprite(val bitmapName: String,
                         val uuid: UUID = UUID.randomUUID()) : JoystickMovementCallbacks,
     SpriteSheetDisplayable {
 
+    var rowToDrawForDirection = mapOf(
+        Direction.DOWN to 0,
+        Direction.UP to 0,
+        Direction.LEFT to 0,
+        Direction.RIGHT to 0
+    )
+
     val totalFrames
         get() = frameCount + skipFirstFrames + skipLastFrames
 
@@ -283,6 +290,9 @@ class SpriteSheetSprite(val bitmapName: String,
         val drawnX = if (xyOffset.x == -1f) x else xyOffset.x.toInt()
         val drawnY = if (xyOffset.y == -1f) y else xyOffset.y.toInt()
 
+        // if we are going up/down more or left/right more
+        val upDown = abs(drawnX - x) < abs(drawnY - y)
+
         val location = RectF(drawnX.toFloat(), drawnY.toFloat(),
             frameWidth + drawnX, frameHeight + drawnY)
 
@@ -297,7 +307,7 @@ class SpriteSheetSprite(val bitmapName: String,
         }
 
         // flip if facing left
-        val bmp = if (direction.first == Direction.LEFT) flipped else bitmap
+        val bmp = bitmap//if (direction.first == Direction.LEFT) flipped else bitmap
 
         val frameIndex = frameCount - skipLastFrames
         currentFrame = if (frameIndex > 0)
@@ -306,14 +316,17 @@ class SpriteSheetSprite(val bitmapName: String,
             skipFirstFrames
 
         // frames backwards if facing left
-        val frame = if (direction.first == Direction.LEFT)
-            frameCount - currentFrame
-        else currentFrame
+        val frame = currentFrame
+//        V/if (direction.first == Direction.LEFT)
+//            frameCount - currentFrame
+//        else currentFrame
 
         frameToDraw.left = (frame * frameWidth).toInt()
         frameToDraw.right = (frameToDraw.left + frameWidth).toInt()
 
-        frameToDraw.top = (frameHeight * heightRow).toInt()
+        val rowToDraw = rowToDrawForDirection[if (upDown) direction.second else direction.first]!!
+
+        frameToDraw.top = (frameHeight * rowToDraw).toInt()
         frameToDraw.bottom = (frameToDraw.top + frameHeight).toInt()
 
         lastFrame = FrameInfo(bmp, frameToDraw, location)

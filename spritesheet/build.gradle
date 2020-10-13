@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
+def libraryName = "SpriteSheet"
+def libraryGroupId = 'ca.doophie'
+def libraryArtifactId = 'spritesheets'
+def libraryVersion = '0.0.1'
+def gitUrl = 'https://github.com/Doophie/SpriteSheets'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -12,7 +18,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName libraryVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,12 +40,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
-
-def libraryName = "SpriteSheet"
-def libraryGroupId = 'ca.doophie'
-def libraryArtifactId = 'spritesheets'
-def libraryVersion = '0.0.1'
-def gitUrl = 'https://github.com/Doophie/SpriteSheets'
 
 // Create the pom configuration:
 def pomConfig = {
@@ -92,7 +92,7 @@ bintray {
     publish = true
     override = true
     pkg {
-        repo = 'SpriteSheet'
+        repo = libraryName
         name = libraryArtifactId
         desc = 'Library for handling and drawing sprites on a sprite sheet.'
         licenses = ['Apache-2.0']
