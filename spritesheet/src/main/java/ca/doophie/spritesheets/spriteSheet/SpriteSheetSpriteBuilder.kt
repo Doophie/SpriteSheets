@@ -18,6 +18,9 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
     private var initialX: Int? = null
     private var initialY: Int? = null
 
+    private var moveSpeed: Int? = null
+    private var animationFPS: Int? = null
+
     // set row to draw
     var rowToDrawForDirection = hashMapOf(
         Direction.DOWN to 0,
@@ -78,6 +81,16 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
         return this
     }
 
+    fun setAnimationFPS(fps: Int): SpriteSheetSpriteBuilder {
+        animationFPS = fps
+        return this
+    }
+
+    fun setRunSpeed(speed: Int): SpriteSheetSpriteBuilder {
+        moveSpeed = speed
+        return this
+    }
+
     fun build(activity: Activity): SpriteSheetSprite {
         val sprite = SpriteSheetSprite(
             resourceName,
@@ -93,6 +106,9 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
         )
 
         sprite.rowToDrawForDirection = rowToDrawForDirection
+
+        moveSpeed?.let { sprite.movespeed = it }
+        animationFPS?.let { sprite.maxFPS = it }
 
         if (initialX != null && initialY != null) {
             sprite.x = initialX!!

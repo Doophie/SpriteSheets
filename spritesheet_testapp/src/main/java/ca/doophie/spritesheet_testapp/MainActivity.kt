@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
             .setRowToDrawForDirection(1, Direction.UP)
             .setRowToDrawForDirection(2, Direction.LEFT)
             .setRowToDrawForDirection(3, Direction.RIGHT)
+            .setAnimationFPS(12)
+            .setRunSpeed(25)
             .build(this)
 
         characterSprite.x = mainSpriteSheet.background!!.initialPlayerLocation.x.toInt()

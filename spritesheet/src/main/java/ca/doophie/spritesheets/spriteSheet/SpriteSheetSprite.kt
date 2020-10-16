@@ -125,6 +125,7 @@ class SpriteSheetSprite(val bitmapName: String,
     var x = 1500
     var y = 1500
     var direction: Pair<Direction, Direction> = Pair(Direction.RIGHT, Direction.DOWN)
+    var primaryDirection = Direction.DOWN
 
     var autoMovePattern: MovementPattern? = null
         set(value) {
@@ -290,9 +291,6 @@ class SpriteSheetSprite(val bitmapName: String,
         val drawnX = if (xyOffset.x == -1f) x else xyOffset.x.toInt()
         val drawnY = if (xyOffset.y == -1f) y else xyOffset.y.toInt()
 
-        // if we are going up/down more or left/right more
-        val upDown = abs(drawnX - x) < abs(drawnY - y)
-
         val location = RectF(drawnX.toFloat(), drawnY.toFloat(),
             frameWidth + drawnX, frameHeight + drawnY)
 
@@ -324,7 +322,7 @@ class SpriteSheetSprite(val bitmapName: String,
         frameToDraw.left = (frame * frameWidth).toInt()
         frameToDraw.right = (frameToDraw.left + frameWidth).toInt()
 
-        val rowToDraw = rowToDrawForDirection[if (upDown) direction.second else direction.first]!!
+        val rowToDraw = rowToDrawForDirection[primaryDirection]!!
 
         frameToDraw.top = (frameHeight * rowToDraw).toInt()
         frameToDraw.bottom = (frameToDraw.top + frameHeight).toInt()
@@ -334,9 +332,18 @@ class SpriteSheetSprite(val bitmapName: String,
         return lastFrame!!
     }
 
-    fun move(strength: Double, angle: Double) {
+    private fun move(strength: Double, angle: Double) {
         s = strength
         a = angle
+        primaryDirection = if (s == 0.0) {
+           primaryDirection
+        } else when (a.toInt()) {
+            in 45..135 -> Direction.UP
+            in 135..225 -> Direction.LEFT
+            in 225..315 -> Direction.DOWN
+            else -> Direction.RIGHT
+        }
+
     }
 
     override fun onMove(strength: Double, angle: Double) {
