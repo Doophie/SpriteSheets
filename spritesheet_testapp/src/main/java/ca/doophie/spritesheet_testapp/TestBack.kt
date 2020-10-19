@@ -4,11 +4,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
-import ca.doophie.spritesheets.extensions.bitmap
+import ca.doophie.spritesheets.ktextensions.bitmap
 import ca.doophie.spritesheets.spriteSheet.BackgroundInteractable
 import ca.doophie.spritesheets.spriteSheet.SpecialPoint
 import ca.doophie.spritesheets.spriteSheet.SpriteSheetBackground
 
+/****************************************************
+ *          This file was auto-generated            *
+ *      using the generateBackgrounds.py script     *
+ ****************************************************/
 object TestBack {
     fun build(context: Context): SpriteSheetBackground {
         return SpriteSheetBackground(Bitmap.createScaledBitmap(context.resources.bitmap(R.drawable.background)!!, 9600, 5400, false),

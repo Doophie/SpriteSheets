@@ -1,7 +1,7 @@
 package ca.doophie.spritesheets.spriteSheet
 
 import android.graphics.*
-import ca.doophie.spritesheets.extensions.*
+import ca.doophie.spritesheets.ktextensions.*
 import ca.doophie.spritesheets.views.JoystickMovementCallbacks
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,6 +42,7 @@ class SpriteSheetSprite(val bitmapName: String,
                         val heightRow: Int = 0,
                         val skipLastFrames: Int = 0,
                         val skipFirstFrames: Int = 0,
+                        private val layeredImages: List<Bitmap> = emptyList(),
                         val uuid: UUID = UUID.randomUUID()) : JoystickMovementCallbacks,
     SpriteSheetDisplayable {
 
@@ -82,6 +83,24 @@ class SpriteSheetSprite(val bitmapName: String,
 
     var movespeed = 10
 
+    /*
+        When the player is idle it will decide which frame to display based on this
+        callback if its set. The callback parameter will be the last frame, the return should
+        be the next frame
+     */
+    fun onNextIdleFrame(callbacks: (Int)->Int) {
+        nextIdleCallback = callbacks
+    }
+    private var nextIdleCallback: ((Int)->Int)? = null
+    private val nextIdleFrame: Int
+        get() {
+            return if (nextIdleCallback != null) {
+                nextIdleCallback?.invoke(lastFrameI)!!
+            } else {
+                val frameIndex = frameCount - skipLastFrames
+                (currentFrame + skipFirstFrames + 1) % frameIndex
+            }
+        }
 
     private fun getRampWall(side: Direction, rampLocation: RectF): RectF {
         val wallThickness = 20
@@ -140,6 +159,7 @@ class SpriteSheetSprite(val bitmapName: String,
     var maxFPS = frameCount / 2
     var framesSinceLastChange = 0
     var currentFrame = 0
+    var lastFrameI = 0
 
     private val frameToDraw = Rect(0, 0, frameWidth.toInt(), frameHeight.toInt())
 
@@ -158,12 +178,30 @@ class SpriteSheetSprite(val bitmapName: String,
         get() {
             if (_bitmap != null) return _bitmap!!
 
-            _bitmap = Bitmap.createScaledBitmap(
+            var layeredBitmap = Bitmap.createScaledBitmap(
                 image,
                 (frameWidth * (frameCount + skipLastFrames + skipFirstFrames)).toInt(),
                 (frameHeight * heightMultiple).toInt(),
                 false
             )
+
+            for (bmp in layeredImages) {
+                val topLayer = Bitmap.createScaledBitmap(
+                    bmp,
+                    (frameWidth * (frameCount + skipLastFrames + skipFirstFrames)).toInt(),
+                    (frameHeight * heightMultiple).toInt(),
+                    false
+                )
+
+                val newLayeredBitmap = Bitmap.createBitmap(layeredBitmap.getWidth(), layeredBitmap.getHeight(), layeredBitmap.getConfig())
+                val canvas = Canvas(newLayeredBitmap)
+                canvas.drawBitmap(layeredBitmap, Matrix(), null)
+                canvas.drawBitmap(topLayer, Matrix(), null)
+
+                layeredBitmap = newLayeredBitmap
+            }
+
+            _bitmap = layeredBitmap
 
             return _bitmap!!
         }
@@ -308,7 +346,10 @@ class SpriteSheetSprite(val bitmapName: String,
         val bmp = bitmap//if (direction.first == Direction.LEFT) flipped else bitmap
 
         val frameIndex = frameCount - skipLastFrames
-        currentFrame = if (frameIndex > 0)
+        lastFrameI = currentFrame
+        currentFrame = if (s == 0.0)
+            nextIdleFrame
+        else if (frameIndex > 0)
             (currentFrame + skipFirstFrames + 1) % frameIndex
         else
             skipFirstFrames

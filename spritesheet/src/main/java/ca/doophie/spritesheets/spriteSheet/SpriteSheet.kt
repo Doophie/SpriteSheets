@@ -11,8 +11,8 @@ import android.util.Log
 import android.util.Size
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import ca.doophie.spritesheets.extensions.rect
-import ca.doophie.spritesheets.extensions.cropped
+import ca.doophie.spritesheets.ktextensions.rect
+import ca.doophie.spritesheets.ktextensions.cropped
 import java.lang.Exception
 
 class SpriteSheet(context: Context, attrs: AttributeSet)

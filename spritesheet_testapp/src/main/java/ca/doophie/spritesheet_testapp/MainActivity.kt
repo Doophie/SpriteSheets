@@ -2,7 +2,7 @@ package ca.doophie.spritesheet_testapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ca.doophie.spritesheets.extensions.bitmap
+import ca.doophie.spritesheets.ktextensions.bitmap
 import ca.doophie.spritesheets.spriteSheet.Direction
 import ca.doophie.spritesheets.spriteSheet.SpriteSheetSpriteBuilder
 import ca.doophie.spritesheets.spriteSheet.SpriteSheetTicker
@@ -29,10 +29,12 @@ class MainActivity : AppCompatActivity() {
             .setRowToDrawForDirection(3, Direction.RIGHT)
             .setAnimationFPS(12)
             .setRunSpeed(25)
+            .setLocation(mainSpriteSheet.background!!.initialPlayerLocation)
+            .setBitmapLayers(listOf(
+                resources.bitmap(R.drawable.purple_outfit)!!,
+                resources.bitmap(R.drawable.weaponsprite_crystal_sword)!!
+            ))
             .build(this)
-
-        characterSprite.x = mainSpriteSheet.background!!.initialPlayerLocation.x.toInt()
-        characterSprite.y = mainSpriteSheet.background!!.initialPlayerLocation.y.toInt()
 
         playerJoystick.movementCallbacks = characterSprite
 

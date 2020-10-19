@@ -9,11 +9,11 @@ def printUsage(self):
     print("---------------------------------")
     print("Usage:")
     print("    - Requires params in the following order (* means optional):")
-    print("      1 - The output file / class name")
-    print("      2 - The file containing the actual background")
-    print("      4 - The file containing rectangles outlining where walls should go")
-    print("    * 3 - The file containing rectangles outlining where ramps should go")
-    print("    * 5+ - Files containing elevated spaces, the later the file the higher the elevation")
+    print("      1    - The output file / class name")
+    print("      2    - The file containing the actual background")
+    print("      4    - The file containing rectangles outlining where walls should go")
+    print("    * 3    - The file containing rectangles outlining where ramps should go")
+    print("    * 5+   - Files containing elevated spaces, the later the file the higher the elevation")
     print("    * last - The final parameter can optionally be a multiplier for the desired size the drawn background, "
           "it will be x times bigger than the input.")
 
@@ -43,6 +43,7 @@ class SpriteSheetBackgroundGenerator:
         cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = cnts[0] if len(cnts) == 2 else cnts[1]
         rects = []
+        print(f"Found {len(cnts)} rects")
         for c in cnts:
             peri = cv2.arcLength(c, True)
             approx = cv2.approxPolyDP(c, 0.015 * peri, True)
@@ -103,22 +104,30 @@ if __name__ == '__main__':
             for rect in generator.getRects(elevationFile):
                 specialPoints.append(generator.getSpecialPoint(rect, "ELEVATED_SPACE", multiplier, index + 2))
 
-    print("package ca.doophie.spritesheet_testapp\n\n" +
-          "import android.content.Context\n" +
-          "import android.graphics.Bitmap\n" +
-          "import android.graphics.PointF\n" +
-          "import android.graphics.RectF\n" +
-          "import ca.doophie.spritesheets.extensions.bitmap\n" +
-          "import ca.doophie.spritesheets.spriteSheet.BackgroundInteractable\n" +
-          "import ca.doophie.spritesheets.spriteSheet.SpecialPoint\n" +
-          "import ca.doophie.spritesheets.spriteSheet.SpriteSheetBackground\n\n" +
-          "object {} {{\n".format(name) +
-          "    fun build(context: Context): SpriteSheetBackground {\n" +
-          "        return SpriteSheetBackground(Bitmap.createScaledBitmap(context.resources.bitmap(R.drawable.{})!!, {}, {}, false),\n".format(
-              bgFile.split("/")[-1].split(".")[0], generator.imageWidth * multiplier, generator.imageHeight * multiplier) +
-          "            PointF(1f, 1f),\n" +
-          "            listOf(\n" +
-          "{}\n".format(generator.makePretty(specialPoints)) +
-          "            ))\n" +
-          "    }\n" +
-          "} \n")
+    result =  "package ca.doophie.spritesheet_testapp\n\n" 
+    result += "import android.content.Context\n" 
+    result += "import android.graphics.Bitmap\n" 
+    result += "import android.graphics.PointF\n" 
+    result += "import android.graphics.RectF\n" 
+    result += "import ca.doophie.spritesheets.ktextensions.bitmap\n"
+    result += "import ca.doophie.spritesheets.spriteSheet.BackgroundInteractable\n" 
+    result += "import ca.doophie.spritesheets.spriteSheet.SpecialPoint\n" 
+    result += "import ca.doophie.spritesheets.spriteSheet.SpriteSheetBackground\n\n" 
+    result += "/****************************************************\n"
+    result += " *          This file was auto-generated            *\n"
+    result += " *      using the generateBackgrounds.py script     *\n"
+    result += " ****************************************************/\n"
+    result += "object {} {{\n".format(name) 
+    result += "    fun build(context: Context): SpriteSheetBackground {\n" 
+    result += "        return SpriteSheetBackground(Bitmap.createScaledBitmap(context.resources.bitmap(R.drawable.{})!!, {}, {}, false),\n".format(
+              bgFile.split("/")[-1].split(".")[0], generator.imageWidth * multiplier, generator.imageHeight * multiplier) 
+    result += "            PointF(1f, 1f),\n" 
+    result += "            listOf(\n" 
+    result += "{}\n".format(generator.makePretty(specialPoints)) 
+    result += "            ))\n" 
+    result += "    }\n" 
+    result += "} \n"
+    
+    file1 = open(f"{name}.kt", "w") 
+    file1.write(result)
+

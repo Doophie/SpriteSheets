@@ -4,12 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryName = "SpriteSheet"
-def libraryGroupId = 'ca.doophie'
-def libraryArtifactId = 'spritesheets'
-def libraryVersion = '0.0.1'
-def gitUrl = 'https://github.com/Doophie/SpriteSheets'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -17,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName libraryVersion
+        versionCode 4
+        versionName '0.0.4'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,66 +35,104 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
+repositories {
+    mavenCentral()
+}
+
+// applied specifically at the bottom
+apply from: './scripts/bintrayConfig.gradle'
+
 // Create the pom configuration:
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "doophie"
-            name "Quinn Fagan"
-            email "quinn@doophie.ca"
-        }
-    }
-
-    scm {
-        url gitUrl
-    }
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            bundleReleaseAar(MavenPublication) {
-                from components.release
-                groupId = libraryGroupId
-                artifactId = libraryArtifactId
-                version = libraryVersion
-
-                pom.withXml {
-                    def root = asNode()
-                    root.appendNode('description', "Spritesheets for stuff")
-                    root.appendNode('name', libraryName)
-                    root.appendNode('url', gitUrl)
-                    root.children().last() + pomConfig
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    user = project.property('bintray.user')
-    key = project.property('bintray.token')
-    publications = ['bundleReleaseAar']
-    publish = true
-    override = true
-    pkg {
-        repo = libraryName
-        name = libraryArtifactId
-        desc = 'Library for handling and drawing sprites on a sprite sheet.'
-        licenses = ['Apache-2.0']
-        vcsUrl = gitUrl
-        publicDownloadNumbers = true
-        version {
-            name = libraryVersion
-            released = new Date()
-        }
-    }
-}
+//def pomConfig = {
+//    licenses {
+//        license {
+//            name "The Apache Software License, Version 2.0"
+//            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+//            distribution "repo"
+//        }
+//    }
+//    developers {
+//        developer {
+//            id "doophie"
+//            name "Quinn Fagan"
+//            email "quinn@doophie.ca"
+//        }
+//    }
+//
+//    scm {
+//        url gitUrl
+//    }
+//}
+//
+//if (project.hasProperty("android")) { // Android libraries
+//    task sourcesJar(type: Jar) {
+//        classifier = 'sources'
+//        from android.sourceSets.main.java.srcDirs
+//    }
+//
+//    task javadoc(type: Javadoc) {
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//} else { // Java libraries
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+//
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            // Creates a Maven publication called "release".
+//            bundleReleaseAar(MavenPublication) {
+//                from components.release
+//                groupId = libraryGroupId
+//                artifactId = libraryArtifactId
+//                version = libraryVersion
+//
+//                pom.withXml {
+//                    def root = asNode()
+//                    root.appendNode('description', "Spritesheets for stuff")
+//                    root.appendNode('name', libraryName)
+//                    root.appendNode('url', gitUrl)
+//                    root.children().last() + pomConfig
+//                }
+//
+//                javadoc {
+//                    failOnError = false
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//bintray {
+//    user = project.property('bintray.user')
+//    key = project.property('bintray.token')
+//    publications = ['bundleReleaseAar']
+//    publish = true
+//    override = true
+//    pkg {
+//        repo = libraryName
+//        name = libraryArtifactId
+//        desc = 'Library for handling and drawing sprites on a sprite sheet.'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = gitUrl
+//        publicDownloadNumbers = true
+//        version {
+//            name = libraryVersion
+//            released = new Date()
+//        }
+//    }
+//}

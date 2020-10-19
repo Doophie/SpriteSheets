@@ -1,4 +1,4 @@
-package ca.doophie.spritesheets.extensions
+package ca.doophie.spritesheets.ktextensions
 
 import android.graphics.Rect
 

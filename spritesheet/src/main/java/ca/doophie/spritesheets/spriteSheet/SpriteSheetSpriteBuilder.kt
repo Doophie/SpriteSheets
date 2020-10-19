@@ -1,7 +1,9 @@
 package ca.doophie.spritesheets.spriteSheet
 
 import android.app.Activity
-import ca.doophie.spritesheets.extensions.bitmap
+import android.graphics.Bitmap
+import android.graphics.PointF
+import ca.doophie.spritesheets.ktextensions.bitmap
 
 class SpriteSheetSpriteBuilder(private val resourceName: String) {
     // params
@@ -13,6 +15,7 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
     private var heightRow: Int = 0
     private var skipLastFrames: Int = 0
     private var skipFirstFrames: Int = 0
+    private var layeredImages: List<Bitmap> = emptyList()
 
     // other variables to set
     private var initialX: Int? = null
@@ -21,6 +24,7 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
     private var moveSpeed: Int? = null
     private var animationFPS: Int? = null
 
+
     // set row to draw
     var rowToDrawForDirection = hashMapOf(
         Direction.DOWN to 0,
@@ -28,6 +32,12 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
         Direction.LEFT to 0,
         Direction.RIGHT to 0
     )
+
+    fun setBitmapLayers(bmps: List<Bitmap>): SpriteSheetSpriteBuilder {
+        layeredImages = bmps
+
+        return this
+    }
 
     fun setWidth(width: Float): SpriteSheetSpriteBuilder {
         frameWidth = width
@@ -67,9 +77,9 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
         return this
     }
 
-    fun setLocation(x: Int, y: Int): SpriteSheetSpriteBuilder {
-        initialX = x
-        initialY = y
+    fun setLocation(location: PointF): SpriteSheetSpriteBuilder {
+        initialX = location.x.toInt()
+        initialY = location.y.toInt()
 
         return this
     }
@@ -102,7 +112,8 @@ class SpriteSheetSpriteBuilder(private val resourceName: String) {
             heightMultiple,
             heightRow,
             skipLastFrames,
-            skipFirstFrames
+            skipFirstFrames,
+            layeredImages
         )
 
         sprite.rowToDrawForDirection = rowToDrawForDirection

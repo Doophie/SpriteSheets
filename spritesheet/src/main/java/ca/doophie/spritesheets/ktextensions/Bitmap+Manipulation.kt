@@ -1,10 +1,8 @@
-package ca.doophie.spritesheets.extensions
+package ca.doophie.spritesheets.ktextensions
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Rect
-
 
 val Bitmap.flipped: Bitmap?
     get() {
