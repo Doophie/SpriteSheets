@@ -278,6 +278,7 @@ class SpriteSheetSprite(val bitmapName: String,
                 x == finalPos.x ||
                 y == finalPos.y)
                 a = (0 until 360).random().toDouble()
+                setPrimaryDirection()
         }
 
         x = finalPos.x
@@ -312,6 +313,7 @@ class SpriteSheetSprite(val bitmapName: String,
                 x == bounds.left ||
                 y == bounds.right)
                 a = (0 until 360).random().toDouble()
+                setPrimaryDirection()
         }
 
         return Point()
@@ -376,15 +378,18 @@ class SpriteSheetSprite(val bitmapName: String,
     private fun move(strength: Double, angle: Double) {
         s = strength
         a = angle
+        setPrimaryDirection()
+    }
+
+    private fun setPrimaryDirection() {
         primaryDirection = if (s == 0.0) {
-           primaryDirection
+            primaryDirection
         } else when (a.toInt()) {
             in 45..135 -> Direction.UP
             in 135..225 -> Direction.LEFT
             in 225..315 -> Direction.DOWN
             else -> Direction.RIGHT
         }
-
     }
 
     override fun onMove(strength: Double, angle: Double) {

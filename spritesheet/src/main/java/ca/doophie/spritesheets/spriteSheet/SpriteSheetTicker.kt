@@ -37,7 +37,7 @@ class SpriteSheetTicker(private val threadName: String): Runnable {
             else
                 pastFps.sum() / pastFps.count()
 
-            if (pastFps.count() > 5) pastFps.drop(1)
+            if (pastFps.count() > 10) pastFps.removeAt(0)
 
             this.pastFps = pastFps
         }

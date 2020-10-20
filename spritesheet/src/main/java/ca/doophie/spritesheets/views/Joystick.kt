@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
@@ -92,7 +94,7 @@ class Joystick(context: Context, attributes: AttributeSet):
         this.setBackgroundColor(Color.TRANSPARENT)
         this.setZOrderOnTop(true)
         holder.setFormat(PixelFormat.TRANSPARENT)
-        android.os.Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             reset()
         }, 100)
     }
