@@ -319,6 +319,14 @@ class SpriteSheetSprite(val bitmapName: String,
         return Point()
     }
 
+    fun getStillSprite(facing: Direction): SpriteSheetSprite {
+        val stillSprite = copy()
+        stillSprite.primaryDirection = facing
+        stillSprite.x = 0
+        stillSprite.y = 0
+        return stillSprite
+    }
+
     override var lastFrame: FrameInfo? = null
     override fun getFrameInfo(fps: Int, xyOffset: PointF): FrameInfo {
         if (isAnimating) return getAnimationFrame(fps)

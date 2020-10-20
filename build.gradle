@@ -15,8 +15,8 @@ buildscript {
 
 ext {
     // ValidateTor Library Info
-    libVersionCode = 8
-    libVersionName = '0.0.8'
+    libVersionCode = 9
+    libVersionName = '0.0.9'
 
     libPomUrl = 'https://github.com/Doophie/SpriteSheets'
     libGithubRepo = 'Doophie/SpriteSheets'
